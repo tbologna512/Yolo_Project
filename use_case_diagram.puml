@@ -1,0 +1,40 @@
+@startuml 
+left to right direction
+skinparam packageStyle rectangle
+
+actor "User" as User
+
+package "Macro Manager System" {
+  usecase "Scan Candy Item" as UC1
+  usecase "Handle Unknown Object" as UC2
+  usecase "Handle Camera Error" as UC3
+}
+
+' Relationships
+User --> UC1
+User --> UC2
+User --> UC3
+
+' Notes to explain the scenarios (Win/Lose/Invalid)
+note right of UC1
+  <b>Winning Scenario</b>
+  User holds candy (e.g. Snickers).
+  System detects it (95% confidence)
+  and displays calorie info.
+end note
+
+note right of UC2
+  <b>Losing Scenario</b>
+  User holds non-candy (e.g. Keys).
+  System fails detection (<40% confidence).
+  Displays "Object Not Recognized".
+end note
+
+note right of UC3
+  <b>Invalid Scenario</b>
+  No webcam detected.
+  System catches IOError and
+  prompts user to connect camera.
+end note
+
+@enduml
