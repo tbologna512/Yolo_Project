@@ -1,0 +1,18 @@
+# Datasets / exports
+candy_images/
+data.zip
+*.zip
+
+# Model artifacts
+my_model/
+*.pt
+
+# Ultralytics outputs
+runs/
+
+# Python
+__pycache__/
+*.pyc
+
+# VS Code
+.vscode/
