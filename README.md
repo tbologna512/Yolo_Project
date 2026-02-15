@@ -10,10 +10,22 @@ This repo contains code + UML artifacts for running a custom YOLO candy detector
 - `use_case_diagram.puml` — PlantUML use case diagram
 - `models/` — put model weights here (not committed)
 
+## Getting started (follow these steps)
+1) Clone this repo to your PC
+2) Download the model from Releases (v1.0)
+3) Set up the Anaconda environment + install dependencies
+4) Run `run_webcam.py`
+
+### Clone the repo
+```text
+git clone https://github.com/tbologna512/Yolo_Project.git
+cd Yolo_Project
+```
+
 ## Get the model weights
 Model weights are distributed via **GitHub Releases** (not stored in the repo).
 1) Go to **Releases**
-2) Download `my_model.zip`
+2) Open **v1.0** and download `my_model.zip`
 3) Extract and place `my_model.pt` here: `models/my_model.pt`
 
 ## Setup (Recommended: Anaconda)
@@ -27,12 +39,12 @@ conda activate yolo-env1
 ```text
 pip install -r requirements.txt
 ```
-### 3) Optional: NVIDIA GPU acceleration (only if you have an NVIDIA GPU)
+### 3) Optional: NVIDIA GPU acceleration ONLY IF YOU HAVE AN NVIDIA GPU (run in Anaconda Prompt)
 ```text
 pip install --upgrade torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
 ```
 ### 4) Verify CUDA (optional):
-This checks whether PyTorch can see your NVIDIA GPU. If it prints True, your model can run on GPU for faster performance.
+This checks whether PyTorch can see your NVIDIA GPU. If it prints `True`, your model can run on GPU for faster performance.
 
 ```text
 python -c "import torch; print(torch.cuda.is_available()); print(torch.version.cuda)"
@@ -41,7 +53,7 @@ python -c "import torch; print(torch.cuda.is_available()); print(torch.version.c
 ```text
 python run_webcam.py --model models/my_model.pt --source usb0
 ```
-### If a different camera wanted
+### If a different camera needed
 
 ```text
 python run_webcam.py --model models/my_model.pt --source usb1
