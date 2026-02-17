@@ -28,7 +28,15 @@ def main():
     source = parse_source(args.source)
 
     model = YOLO(args.model)
-    model.predict(source=source, imgsz=args.imgsz, show=True)
+
+    # stream=True prevents results from accumulating in RAM on long webcam runs
+    # verbose=False reduces per-frame logging in the terminal
+    results = model.predict(source=source, imgsz=args.imgsz, show=True, stream=True, verbose=False)
+
+    # IMPORTANT: consume the generator so the stream actually runs
+    for _ in results:
+        pass
+
 
 if __name__ == "__main__":
     main()
