@@ -1,4 +1,4 @@
-@startuml 
+@startuml Macro Manager
 left to right direction
 skinparam packageStyle rectangle
 
@@ -8,33 +8,37 @@ package "Macro Manager System" {
   usecase "Scan Candy Item" as UC1
   usecase "Handle Unknown Object" as UC2
   usecase "Handle Camera Error" as UC3
+  usecase "Adjust Webcam Resolution" as UC4 <<New>>
 }
 
-' Relationships
 User --> UC1
 User --> UC2
 User --> UC3
+User --> UC4
 
-' Notes to explain the scenarios (Win/Lose/Invalid)
 note right of UC1
   <b>Winning Scenario</b>
-  User holds candy (e.g. Snickers).
-  System detects it (95% confidence)
-  and displays calorie info.
+  User holds candy item. System
+  detects it and displays info.
 end note
 
 note right of UC2
   <b>Losing Scenario</b>
-  User holds non-candy (e.g. Keys).
-  System fails detection (<40% confidence).
-  Displays "Object Not Recognized".
+  User holds non-food item.
+  Fails detection.
 end note
 
 note right of UC3
   <b>Invalid Scenario</b>
   No webcam detected.
-  System catches IOError and
-  prompts user to connect camera.
+  Catches IOError.
+end note
+
+note right of UC4
+  <color:blue><b>(New Requirement)</b></color>
+  <color:blue>User increases resolution</color> 
+  <color:blue>in run_webcam.py to improve</color> 
+  <color:blue>model detection accuracy.</color>
 end note
 
 @enduml
