@@ -1,0 +1,42 @@
+@startuml MacroManagerLogicalArchitecture
+top to bottom direction
+skinparam packageStyle rectangle
+hide stereotypes
+
+package "UI" as UI {
+  [WebcamWindow]
+  [OverlayRenderer]
+  [ResolutionControl]
+  [CaptureInputHandler]
+}
+
+package "Application" as APP {
+  [ScanController]
+  [CaptureController]
+  [InferenceWorkflow]
+}
+
+package "Domain" as DOM {
+  [CandyProduct]
+  [Detection]
+  [BoundingBox]
+  [TrainingImage]
+  [Dataset]
+  [Annotation]
+  [NutritionEntry]
+}
+
+package "Technical Services" as TECH {
+  [CameraService]
+  [YoloInferenceService]
+  [FileStorageService]
+  [RoboflowService]
+  [NutritionDataService]
+  [LoggingService]
+}
+
+UI ..> APP
+APP ..> DOM
+APP ..> TECH
+
+@enduml

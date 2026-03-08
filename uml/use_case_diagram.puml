@@ -1,4 +1,4 @@
-@startuml Macro Manager
+@startuml MacroManagerUseCase
 left to right direction
 skinparam packageStyle rectangle
 
@@ -8,7 +8,7 @@ package "Macro Manager System" {
   usecase "Scan Candy Item" as UC1
   usecase "Handle Unknown Object" as UC2
   usecase "Handle Camera Error" as UC3
-  usecase "Adjust Webcam Resolution" as UC4 <<New>>
+  usecase "Adjust Webcam Resolution" as UC4
 }
 
 User --> UC1
@@ -35,10 +35,9 @@ note right of UC3
 end note
 
 note right of UC4
-  <color:blue><b>(New Requirement)</b></color>
-  <color:blue>User increases resolution</color> 
-  <color:blue>in run_webcam.py to improve</color> 
-  <color:blue>model detection accuracy.</color>
+  User increases resolution
+  in run_webcam.py to improve
+  model detection accuracy.
 end note
 
 @enduml

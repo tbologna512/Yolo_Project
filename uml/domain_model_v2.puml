@@ -1,0 +1,123 @@
+@startuml MacroManagerDomainModel
+left to right direction
+skinparam monochrome true
+skinparam shadowing false
+skinparam linetype ortho
+skinparam classBackgroundColor white
+skinparam classBorderColor black
+skinparam ArrowColor black
+hide methods
+hide stereotypes
+
+class User {
+  userId: String
+}
+
+class MacroManagerSystem {
+  confidenceThreshold: float  <<0.0..1.0>>
+}
+
+class Camera {
+  cameraSource: String  <<usb0/usb1 or index>>
+  width: int
+  height: int
+}
+
+class LiveCameraFeed {
+  status: String  <<Active/Disconnected>>
+}
+
+class Frame {
+  timestamp: DateTime
+}
+
+class Model {
+  modelName: String
+  version: String
+}
+
+class ModelWeights {
+  fileName: String
+  format: String  <<.pt>>
+}
+
+class Detection {
+  confidenceScore: float  <<0.0..1.0>>
+}
+
+class BoundingBox {
+  x: int
+  y: int
+  w: int
+  h: int
+}
+
+class CandyProduct {
+  classLabel: String  <<canonical>>
+  brand: String
+}
+
+class NutritionEntry {
+  calories: int
+  protein_g: float
+  carbs_g: float
+  fat_g: float
+}
+
+class NutritionDataset {
+  datasetName: String
+  source: String
+}
+
+class TrainingImage {
+  filePath: String
+  capturedAt: DateTime
+}
+
+class Dataset {
+  datasetName: String
+  version: String
+}
+
+class Annotation {
+  label: String
+}
+
+class RoboflowProject {
+  projectName: String
+}
+
+' keep a clean top-row flow similar to Gavin's layout
+User -[hidden]-> MacroManagerSystem
+MacroManagerSystem -[hidden]-> Camera
+Camera -[hidden]-> Frame
+Frame -[hidden]-> Detection
+Detection -[hidden]-> CandyProduct
+CandyProduct -[hidden]-> NutritionEntry
+NutritionEntry -[hidden]-> NutritionDataset
+
+TrainingImage -[hidden]-> Dataset
+Dataset -[hidden]-> Annotation
+Annotation -[hidden]-> RoboflowProject
+Model -[hidden]-> ModelWeights
+
+User "1" --> "1" MacroManagerSystem : uses >
+MacroManagerSystem "1" --> "0..1" Camera : connectsTo >
+MacroManagerSystem "1" --> "1" LiveCameraFeed : shows >
+
+Camera "1" --> "0..*" Frame : produces >
+Model "1" --> "0..*" Detection : produces >
+Model "1" --> "1" ModelWeights : uses >
+Frame "1" --> "0..*" Detection : analyzedBy >
+
+Detection "1" --> "1" BoundingBox : has >
+Detection "0..*" --> "0..1" CandyProduct : identifies >
+CandyProduct "0..1" --> "0..1" NutritionEntry : has >
+NutritionEntry "0..*" --> "1" NutritionDataset : belongsTo >
+
+User "1" --> "0..*" TrainingImage : captures >
+TrainingImage "0..*" --> "1" Dataset : belongsTo >
+Dataset "1" --> "0..*" Annotation : has >
+Dataset "1" --> "0..1" RoboflowProject : isManagedIn >
+Dataset "0..*" --> "0..*" Model : trains >
+@enduml
