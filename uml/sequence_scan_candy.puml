@@ -1,0 +1,35 @@
+@startuml MacroManagerSequenceHW08
+
+participant "user : User" as User
+participant "window : WebcamWindow" as UI
+participant "scan : ScanController" as SC
+participant "cam : CameraService" as Cam
+participant "infer : YoloInferenceService" as Infer
+
+[-> UI : scanCandyItem()
+activate UI
+
+UI -> SC : requestScan()
+activate SC
+
+SC -> Cam : getFrame()
+activate Cam
+Cam --> SC : frame
+deactivate Cam
+
+SC -> Infer : detect(frame)
+activate Infer
+Infer --> SC : detections
+deactivate Infer
+
+alt supported candy detected
+  SC -> UI : showDetection(label, confidence, box)
+else object not recognized
+  SC -> UI : showNotRecognized()
+end
+
+deactivate SC
+[<-- UI : return
+deactivate UI
+
+@enduml

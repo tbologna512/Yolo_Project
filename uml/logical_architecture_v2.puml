@@ -1,0 +1,73 @@
+@startuml MacroManagerLogicalArchitecture
+top to bottom direction
+skinparam packageStyle rectangle
+hide stereotypes
+
+package "UI" as UI {
+  [WebcamWindow]
+  [OverlayRenderer]
+  [ResolutionControl]
+  [CaptureInputHandler]
+}
+
+package "Application" as APP {
+  [ScanController]
+  [CaptureController]
+  [InferenceWorkflow]
+}
+
+package "Domain" as DOM {
+  [CandyProduct]
+  [Detection]
+  [BoundingBox]
+  [TrainingImage]
+  [Dataset]
+  [Annotation]
+  [NutritionEntry]
+}
+
+package "Technical Services" as TECH {
+  [CameraService]
+  [YoloInferenceService]
+  [FileStorageService]
+  [RoboflowService]
+  [NutritionDataService]
+  [LoggingService]
+}
+
+' Layer-level dependencies
+UI ..> APP
+APP ..> DOM
+APP ..> TECH
+DOM ..> TECH
+
+' UI -> Application
+WebcamWindow ..> ScanController
+OverlayRenderer ..> ScanController
+CaptureInputHandler ..> CaptureController
+ResolutionControl ..> CaptureController
+
+' Application -> Domain
+ScanController ..> Detection
+ScanController ..> CandyProduct
+CaptureController ..> TrainingImage
+InferenceWorkflow ..> Detection
+InferenceWorkflow ..> NutritionEntry
+
+' Application -> Technical Services
+ScanController ..> CameraService
+ScanController ..> YoloInferenceService
+CaptureController ..> FileStorageService
+CaptureController ..> RoboflowService
+InferenceWorkflow ..> NutritionDataService
+InferenceWorkflow ..> LoggingService
+
+' Domain -> Technical Services
+Detection ..> YoloInferenceService
+BoundingBox ..> YoloInferenceService
+CandyProduct ..> NutritionDataService
+NutritionEntry ..> NutritionDataService
+TrainingImage ..> FileStorageService
+TrainingImage ..> RoboflowService
+
+@enduml

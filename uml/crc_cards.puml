@@ -1,0 +1,49 @@
+@startuml CRC_Cards_MacroManager
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor white
+  BorderColor black
+}
+
+class WebcamWindow {
+  == Responsibilities ==
+  - Display live webcam feed
+  - Show detection results
+  - Receive user input for scanning
+  - Forward scan request
+
+  == Collaborators ==
+  - ScanController
+  - OverlayRenderer
+}
+
+class ScanController {
+  == Responsibilities ==
+  - Coordinate scan workflow
+  - Request frame from camera
+  - Send frame for inference
+  - Decide result to display
+
+  == Collaborators ==
+  - WebcamWindow
+  - CameraService
+  - YoloInferenceService
+  - Detection
+}
+
+class YoloInferenceService {
+  == Responsibilities ==
+  - Run YOLO model
+  - Produce detection results
+  - Handle no-detection case
+
+  == Collaborators ==
+  - ScanController
+  - Detection
+}
+
+WebcamWindow -- ScanController
+ScanController -- YoloInferenceService
+
+@enduml
