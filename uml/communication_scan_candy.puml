@@ -1,0 +1,21 @@
+@startuml MacroManagerCommunicationDiagram
+top to bottom direction
+skinparam linetype ortho
+
+object "user : User" as User
+object "window : WebcamWindow" as Window
+object "scan : ScanController" as Scan
+object "cam : CameraService" as Cam
+object "infer : YoloInferenceService" as Infer
+
+User --> Window : 1: scanCandyItem()
+Window --> Scan : 1.1: requestScan()
+Scan --> Cam : 1.2: getFrame()
+Cam --> Scan : 1.3: frame
+Scan --> Infer : 1.4: detect(frame)
+Infer --> Scan : 1.5: detections
+
+Scan --> Window : 1.6a [recognized] : showDetection(label, confidence)
+Scan --> Window : 1.6b [not recognized] : showNotRecognized()
+
+@enduml
