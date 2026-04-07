@@ -1,0 +1,102 @@
+@startuml MacroManagerClassDiagram
+skinparam classAttributeIconSize 0
+
+' =========================
+' UI Layer
+' =========================
+class WebcamWindow {
+  +displayFeed()
+  +getUserInput()
+  +showDetection()
+}
+
+class OverlayRenderer {
+  +drawBoundingBox()
+  +drawLabel()
+}
+
+' =========================
+' Application Layer
+' =========================
+class ScanController {
+  +scanCandyItem()
+  +processFrame()
+}
+
+class CaptureController {
+  +captureImage()
+  +saveImage()
+}
+
+' =========================
+' Domain Layer
+' =========================
+class Detection {
+  confidence : float
+  +getLabel()
+}
+
+class BoundingBox {
+  x : int
+  y : int
+  width : int
+  height : int
+}
+
+class CandyProduct {
+  name : String
+  brand : String
+}
+
+class NutritionEntry {
+  calories : int
+  protein : float
+}
+
+class TrainingImage {
+  filePath : String
+}
+
+' =========================
+' Technical Services
+' =========================
+class CameraService {
+  +getFrame()
+}
+
+class YoloInferenceService {
+  +detect(frame)
+}
+
+class FileStorageService {
+  +saveImage()
+}
+
+class RoboflowService {
+  +uploadImage()
+}
+
+' =========================
+' Relationships
+' =========================
+
+' UI / application dependencies
+WebcamWindow ..> ScanController : uses >
+CaptureController ..> FileStorageService : uses >
+
+' application / service dependencies
+ScanController ..> CameraService : cameraService >
+ScanController ..> YoloInferenceService : inferenceService >
+CaptureController ..> CameraService : cameraService >
+
+' application / domain dependencies
+ScanController ..> Detection : detection >
+CaptureController ..> TrainingImage : trainingImage >
+
+' structural domain associations
+Detection "1" --> "1" BoundingBox : boundingBox >
+Detection "1" --> "0..1" CandyProduct : candyProduct >
+CandyProduct "1" --> "0..1" NutritionEntry : nutritionEntry >
+TrainingImage "0..*" --> "1" RoboflowService : uploadedBy >
+
+@enduml
