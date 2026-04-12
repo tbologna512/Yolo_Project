@@ -3,10 +3,17 @@
 Team project for Software Engineering I (OOAD/UML + iterative development).  
 This repo contains code + UML artifacts for running a custom YOLO candy detector locally.
 
+## Overview
+
+Macro Manager is a computer vision system that detects packaged candy using a trained YOLO model and displays information such as product identity and confidence level.
+
+The system has been iteratively developed throughout the semester, transitioning from an initial script-based implementation to a more structured object-oriented design.
+
+
 ## Contents
 - `run_webcam.py` — run the trained YOLO model on a webcam or file
 - `find_camera.py` — helper to identify camera indexes
-- `macro_manager.py` — utility used to capture images for dataset expansion
+- `macro_manager.py` — utility used to capture images for dataset expansion and training
 - `use_case_diagram.puml` — PlantUML use case diagram
 - `models/` — put model weights here (not committed)
 
@@ -58,3 +65,81 @@ python run_webcam.py --model models/my_model.pt --source usb0
 ```text
 python run_webcam.py --model models/my_model.pt --source usb1
 ```
+---
+
+## Object-Oriented Design (Current Iteration)
+
+The project has been refactored to follow an object-oriented design that aligns with the system’s UML diagrams and layered architecture.
+
+The system is organized into the following layers:
+
+- **UI Layer**
+  - Handles user interaction and display (e.g., WebcamWindow)
+
+- **Application Layer**
+  - Coordinates workflows and system behavior (e.g., ScanController, CaptureController)
+
+- **Domain Layer**
+  - Represents core system data (e.g., Detection, BoundingBox, CandyProduct, TrainingImage)
+
+- **Technical Services Layer**
+  - Provides reusable services such as camera access, inference, and file storage (e.g., CameraService, YoloInferenceService, FileStorageService)
+
+This structure improves modularity, maintainability, and alignment between design and implementation.
+
+---
+
+## Project Structure (OOP Refactor)
+
+```
+controllers/
+    scan_controller.py
+    capture_controller.py
+
+domain/
+    models.py
+
+services/
+    camera_service.py
+    yolo_inference_service.py
+    file_storage_service.py
+
+run_webcam.py
+macro_manager.py
+find_camera.py
+```
+## Quick Run (OOP Version)
+
+1. Open Anaconda Prompt
+2. Navigate to the project folder:
+   cd C:\SoftEngBigP
+
+3. Activate the environment:
+   conda activate yolo-env1
+
+4. Run the webcam inference:
+   python run_webcam.py --source usb1
+
+5. (Optional) Run data collection:
+   python macro_manager.py
+
+## Iterative Development
+
+This project was developed using an iterative approach. Early versions focused on quickly implementing functionality using script-based code.
+
+Later iterations emphasized:
+- UML modeling (domain model, sequence diagrams, communication diagrams, class diagrams)
+- separation of concerns
+- transition to object-oriented design
+
+The current implementation reflects the intended design structure defined in the UML artifacts.
+
+## Challenges and Constraints
+
+- Limited initial experience with team collaboration using GitHub
+- Difficulty balancing multiple projects and coordinating contributions
+- Initial over-ambition of the system design (AI-based system)
+- Early tendency toward a waterfall-style approach instead of iterative refinement
+- Time constraints and scheduling conflicts among team members
+
+As the semester progressed, the team improved by focusing on smaller iterations and aligning implementation with design artifacts.
