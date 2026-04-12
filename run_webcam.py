@@ -1,19 +1,19 @@
 import argparse
-from ultralytics import YOLO
+import cv2
+
+from services.camera_service import CameraService
+from services.yolo_inference_service import YoloInferenceService
+from controllers.scan_controller import ScanController
+
 
 def parse_source(src: str):
-    """
-    Accepts:
-      - usb0 / usb1 / usb2 (webcams)
-      - an integer camera index like 0, 1, 2
-      - a file path (image/video)
-    """
     s = src.strip().lower()
     if s.startswith("usb") and s[3:].isdigit():
         return int(s[3:])
     if s.isdigit():
         return int(s)
-    return src  # treat as path
+    return src
+
 
 def main():
     ap = argparse.ArgumentParser()
@@ -27,15 +27,47 @@ def main():
 
     source = parse_source(args.source)
 
-    model = YOLO(args.model)
+    camera_service = CameraService(source)
+    if not camera_service.open():
+        print("Error: Could not open webcam or source.")
+        return
 
-    # stream=True prevents results from accumulating in RAM on long webcam runs
-    # verbose=False reduces per-frame logging in the terminal
-    results = model.predict(source=source, imgsz=args.imgsz, show=True, stream=True, verbose=False)
+    inference_service = YoloInferenceService(args.model, imgsz=args.imgsz)
+    scan_controller = ScanController(camera_service, inference_service)
 
-    # IMPORTANT: consume the generator so the stream actually runs
-    for _ in results:
-        pass
+    print("Macro Manager OOP Refactor - Webcam Inference")
+    print("Press 'Q' to quit.")
+
+    while True:
+        ret, frame = scan_controller.get_next_frame()
+        if not ret:
+            print("Failed to grab frame")
+            break
+
+        detections = scan_controller.process_frame(frame)
+
+        y_offset = 30
+        for detection in detections:
+            text = f"{detection.label} ({detection.confidence:.2f})"
+            cv2.putText(
+                frame,
+                text,
+                (10, y_offset),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.8,
+                (0, 255, 0),
+                2
+            )
+            y_offset += 30
+
+        cv2.imshow("Macro Manager - Webcam Inference", frame)
+
+        key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+            break
+
+    camera_service.release()
+    cv2.destroyAllWindows()
 
 
 if __name__ == "__main__":
